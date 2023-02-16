@@ -1,0 +1,6 @@
+framework module Pods_MySchoolAssistant {
+  umbrella header "Pods-MySchoolAssistant-umbrella.h"
+
+  export *
+  module * { export * }
+}
