@@ -7,8 +7,16 @@
 
 import SwiftUI
 
+// Create Date
+let date = Date()
+
+// Create Date Formatter
+let dateFormatter = DateFormatter()
+
 //GET, POST, PUT, DELETE, etc...
-func makePOSTRequest() {
+func createPOSTLogs(text: String) {
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    
     // Prepare URL
     let url = URL(string: "http://51.222.158.139:3001/api/logs")
     guard let requestUrl = url else {
@@ -19,8 +27,8 @@ func makePOSTRequest() {
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     let body: [String: AnyHashable] = [
-        "date": "2023-02-17",
-        "description": "mouvement détecté à 14:37"
+        "date":  dateFormatter.string(from: date),
+        "description": text
     ]
     request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
     
