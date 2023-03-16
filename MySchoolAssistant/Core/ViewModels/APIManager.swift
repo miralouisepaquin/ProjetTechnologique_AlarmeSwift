@@ -39,7 +39,7 @@ func createPOSTLogs(text: String) {
             return
         }
         do{
-            let response = try JSONDecoder().decode(Response.self, from: data)
+            let response = try JSONDecoder().decode(Logs.self, from: data)
             print("Success: \(response)")
         }
         catch {
@@ -48,8 +48,51 @@ func createPOSTLogs(text: String) {
     }
     task.resume()
     
-    struct Response: Codable{
+    struct Logs: Codable{
         let date: String
         let description: String
     }
 }
+
+func getUserInformations() {
+    
+    struct Users: Codable {
+        let mail: String
+        let password: String
+        let code: Int
+    }
+    
+    // Prepare URL
+    let urlString = "http://51.222.158.139:3001/api/users"
+    guard let url = URL(string: urlString) else {
+        print("Invalid URL")
+        return
+    }
+    
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+                
+        guard let httpResponse = response as? HTTPURLResponse,
+                httpResponse.statusCode == 200,
+                let data = data else {
+            print("Invalid response")
+            return
+        }
+                
+        do {
+            let people = try JSONDecoder().decode([Users].self, from: data)
+
+            // Access the single Person object in the array
+            let user = people[0]
+            print(user)
+            print("Mail: \(user.mail) , Password: \(user.password) , Code: \(user.code)")
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+    }
+    task.resume()
+}
+
